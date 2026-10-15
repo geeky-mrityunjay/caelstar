@@ -37,7 +37,7 @@
     },
     {
       "label": "About",
-      "href": "#/about",
+      "href": "about.html",
       "view": "about"
     }
   ],
