@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CAELSTAR</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!--
+  HOW THIS FILE WORKS
+  - This file is only the page STRUCTURE. All words and lists come from data.json.
+  - data-text="a.b"   : puts the text found at a.b in data.json into this element
+  - data-html="a.b"   : same, but **bold** and *italic* markers become styled words
+  - data-attr="x={a.b}": sets an attribute (link, placeholder...) from data.json
+  - data-list="a.b" + data-template="id": repeats the <template id="..."> once per item
+  Colours and sizes live in style.css. Behaviour lives in script.js.
+-->
+<div id="prog"></div>
+
+<!-- ================= HEADER / NAVIGATION ================= -->
+<header id="hdr"><div class="wrap nav">
+  <a class="logo" href="#/" data-attr="aria-label={site.name} home"><i></i><span data-text="site.name"></span></a>
+  <nav class="menu" id="menu" aria-label="Main" data-list="nav" data-template="tpl-nav-link"></nav>
+  <div class="right">
+    <a class="btn dark" data-s data-text="headerCta.label" data-attr="href={headerCta.href}"></a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</div></header>
+
+<main>
+
+<!-- ================= PAGE: HOME  (#/) ================= -->
+<div class="view" id="v-home">
+
+  <!-- ---------- HERO SECTION ---------- -->
+  <section class="hero"><div class="wrap"><div class="panel" id="panel">
+    <h1 data-list="home.hero.headline" data-template="tpl-hero-line"></h1>
+    <p class="lead" data-text="home.hero.lead"></p>
+    <div class="cta-row">
+      <a class="btn light" data-text="home.hero.secondaryCta.label" data-attr="href={home.hero.secondaryCta.href}"></a>
+      <a class="btn dark" data-s data-text="home.hero.primaryCta.label" data-attr="href={home.hero.primaryCta.href}"></a>
+    </div>
+    <div class="stage">
+      <!-- decorative globe (inline SVG art; colours are fixed here) -->
+      <svg class="big" viewBox="0 0 800 500" aria-hidden="true">
+        <defs><radialGradient id="sph" cx="36%" cy="30%" r="75%"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#cfcfcc"/><stop offset=".75" stop-color="#4a4a48"/><stop offset="1" stop-color="#171717"/></radialGradient><filter id="bl"><feGaussianBlur stdDeviation="14"/></filter></defs>
+        <ellipse cx="400" cy="440" rx="250" ry="22" fill="#171717" opacity=".18" filter="url(#bl)"/>
+        <g id="rings" fill="none" stroke="#171717" stroke-opacity=".22" style="transform-origin:400px 250px"><ellipse cx="400" cy="250" rx="300" ry="82" transform="rotate(-14 400 250)"/><ellipse cx="400" cy="250" rx="230" ry="150" transform="rotate(24 400 250)"/></g>
+        <circle cx="400" cy="250" r="150" fill="url(#sph)"/>
+        <g id="globe" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" style="transform-origin:400px 250px"><path d="M400 100v300"/><path d="M250 250h300"/><ellipse cx="400" cy="250" rx="70" ry="150"/><ellipse cx="400" cy="250" rx="150" ry="70"/></g>
+        <circle cx="545" cy="150" r="8" fill="#83CFC0"/><circle cx="545" cy="150" r="16" fill="#83CFC0" opacity=".3"/>
+      </svg>
+      <!-- floating mini-cards: data.json > home.hero.floatingCards -->
+      <div data-list="home.hero.floatingCards" data-template="tpl-float-card" style="display:contents"></div>
+    </div>
+  </div></div>
+  <!-- scrolling word strip: data.json > home.marquee -->
+  <div class="mq" aria-hidden="true"><div id="mq1"></div></div>
+  </section>
+
+  <!-- ---------- STATEMENT ---------- -->
+  <section><div class="wrap">
+    <p class="scrub" data-scrub="home.statement"></p>
+  </div></section>
+
+  <!-- ---------- SERVICES PREVIEW ---------- -->
+  <section class="pt-0"><div class="wrap">
+    <h2 class="rv" data-html="home.services.title"></h2>
+    <p class="sub rv" data-text="home.services.sub"></p>
+    <div class="grid g3" data-list="services" data-template="tpl-service-card"></div>
+    <a class="more rv" data-text="home.services.link.label" data-attr="href={home.services.link.href}"></a>
+  </div></section>
+
+  <!-- ---------- THREE STEPS ---------- -->
+  <section><div class="wrap split">
+    <div class="stick">
+      <h2 class="rv" data-html="home.steps.title"></h2>
+      <p class="sub rv" data-text="home.steps.sub"></p>
+    </div>
+    <div class="steps">
+      <div class="rail"><i id="rail"></i></div>
+      <div data-list="home.steps.items" data-template="tpl-step" style="display:contents"></div>
+    </div>
+  </div></section>
+
+  <!-- ---------- BENEFITS ---------- -->
+  <section class="pt-0"><div class="wrap split">
+    <div><h2 class="rv" data-html="home.benefits.title"></h2></div>
+    <div class="ben rv" data-list="home.benefits.items" data-template="tpl-benefit"></div>
+  </div></section>
+
+  <!-- ---------- PRICING PREVIEW ---------- -->
+  <section class="pt-0"><div class="wrap">
+    <h2 class="rv" data-html="home.pricing.title"></h2>
+    <p class="sub rv" data-text="home.pricing.sub"></p>
+    <div class="grid g3" data-list="plans" data-template="tpl-plan-card"></div>
+    <a class="more rv" data-text="home.pricing.link.label" data-attr="href={home.pricing.link.href}"></a>
+  </div></section>
+
+  <!-- ---------- QUICK FAQ ---------- -->
+  <section class="pt-0"><div class="wrap split">
+    <div>
+      <h2 class="rv" data-html="home.faq.title"></h2>
+      <a class="more rv" data-text="home.faq.link.label" data-attr="href={home.faq.link.href}"></a>
+    </div>
+    <!-- shows the first N questions of data.json > faq (N = home.faq.howMany) -->
+    <div data-list="faq" data-limit-from="home.faq.howMany" data-template="tpl-faq"></div>
+  </div></section>
+</div>
+
+<!-- ================= PAGE: SERVICES  (#/services) ================= -->
+<div class="view" id="v-services">
+  <section class="ph"><div class="wrap">
+    <h1 data-html="servicesPage.title"></h1>
+    <p class="sub" data-text="servicesPage.sub"></p>
+    <div class="mini"><svg viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true" data-speed="-.08"><g fill="none" stroke="#171717" stroke-opacity=".18"><circle cx="500" cy="190" r="70"/><circle cx="500" cy="190" r="130"/><circle cx="500" cy="190" r="190"/><circle cx="500" cy="190" r="250"/></g><circle cx="500" cy="190" r="34" fill="#171717"/><circle cx="500" cy="190" r="12" fill="#83CFC0"/><circle cx="630" cy="190" r="7" fill="#171717"/><circle cx="310" cy="120" r="7" fill="#83CFC0"/><circle cx="420" cy="320" r="7" fill="#171717"/><circle cx="690" cy="90" r="7" fill="#83CFC0"/><circle cx="760" cy="260" r="7" fill="#171717"/><circle cx="240" cy="250" r="7" fill="#171717"/></svg></div>
+  </div></section>
+  <section class="pt-md"><div class="wrap">
+    <div class="grid g3 mt-0" data-list="services" data-template="tpl-service-card-full"></div>
+  </div></section>
+  <section class="pt-0"><div class="wrap">
+    <p class="scrub" data-scrub="servicesPage.statement"></p>
+    <a class="more" data-text="servicesPage.link.label" data-attr="href={servicesPage.link.href}"></a>
+  </div></section>
+</div>
+
+<!-- ================= PAGE: PRICING  (#/pricing) ================= -->
+<div class="view" id="v-pricing">
+  <section class="ph"><div class="wrap">
+    <h1 data-html="pricingPage.title"></h1>
+    <p class="sub" data-html="pricingPage.sub"></p>
+  </div></section>
+
+  <!-- ---------- PLAN CARDS + COMPARISON TABLE ---------- -->
+  <section class="pt-sm"><div class="wrap">
+    <div class="grid g3 mt-0" data-list="plans" data-template="tpl-plan-card"></div>
+    <div class="tw rv"><table>
+      <thead><tr id="cmpHead"></tr></thead>
+      <tbody id="cmp"></tbody>
+    </table></div>
+  </div></section>
+
+  <!-- ---------- SELLER PROGRAMME ---------- -->
+  <section class="pt-0"><div class="wrap"><div class="seller rv">
+    <div>
+      <span class="tag sea" data-text="pricingPage.seller.badge"></span>
+      <h2 data-html="pricingPage.seller.title"></h2>
+      <p class="sub" data-text="pricingPage.seller.text"></p>
+      <ul class="feat" data-list="pricingPage.seller.features" data-template="tpl-li"></ul>
+    </div>
+    <div class="sf">
+      <div class="lk">
+        <span><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span>
+        <h3 data-html="pricingPage.seller.form.title"></h3>
+      </div>
+      <div class="blur" aria-hidden="true"><span data-text="pricingPage.seller.form.hiddenPrice"></span><small data-text="pricingLabels.period"></small></div>
+      <small data-text="pricingPage.seller.form.note"></small>
+      <input id="sn" aria-label="Your name" autocomplete="name" data-attr="placeholder={pricingPage.seller.form.namePlaceholder}">
+      <input id="se" type="email" aria-label="Work email" autocomplete="email" data-attr="placeholder={pricingPage.seller.form.emailPlaceholder}">
+      <input id="sbz" aria-label="Business or marketplace" data-attr="placeholder={pricingPage.seller.form.businessPlaceholder}">
+      <button class="btn dark" id="sb" data-text="pricingPage.seller.form.button"></button>
+      <div class="msg" id="smsg" role="status"></div>
+    </div>
+  </div></div></section>
+</div>
+
+<!-- ================= PAGE: FAQ  (#/faq) ================= -->
+<div class="view" id="v-faq">
+  <section class="ph"><div class="wrap">
+    <h1 data-html="faqPage.title"></h1>
+    <p class="sub" data-text="faqPage.sub"></p>
+  </div></section>
+  <section class="pt-sm"><div class="wrap split">
+    <div class="stick">
+      <h2 class="rv h2-sm" data-html="faqPage.sideTitle"></h2>
+      <a class="more" data-s data-text="faqPage.sideLink.label" data-attr="href={faqPage.sideLink.href}"></a>
+    </div>
+    <div data-list="faq" data-template="tpl-faq"></div>
+  </div></section>
+</div>
+
+<!-- ================= PAGE: ABOUT  (#/about) ================= -->
+<div class="view" id="v-about">
+  <section class="ph"><div class="wrap">
+    <h1 data-html="aboutPage.title"></h1>
+    <p class="sub" data-text="aboutPage.sub"></p>
+  </div></section>
+  <section><div class="wrap">
+    <p class="scrub" data-scrub="aboutPage.statement"></p>
+  </div></section>
+  <section class="pt-0"><div class="wrap">
+    <h2 class="rv" data-html="aboutPage.beliefs.title"></h2>
+    <div class="grid g4" data-list="aboutPage.beliefs.items" data-template="tpl-belief"></div>
+  </div></section>
+  <section class="pt-0"><div class="wrap split">
+    <div><h2 class="rv" data-html="aboutPage.numbers.title"></h2></div>
+    <div class="rv" data-list="aboutPage.numbers.items" data-template="tpl-stat"></div>
+  </div></section>
+</div>
+
+</main>
+
+<!-- ================= SCROLL STORY (constellation) ================= -->
+<section id="storysec" class="story-section"><div class="wrap"><div class="story" id="story"><div class="stk">
+  <p class="sk" data-text="story.hint"></p>
+  <svg id="cst" viewBox="0 0 800 460" role="img" data-attr="aria-label={story.ariaLabel}"></svg>
+  <div class="cap"><span class="cc" id="cc"></span><div class="cn" id="cn"></div><p id="cd"></p></div>
+</div></div></div></section>
+
+<!-- ================= CONTACT / FINAL CTA ================= -->
+<section id="contact" class="pt-0"><div class="wrap"><div class="final rv">
+  <h2 data-html="contact.title"></h2>
+  <p data-text="contact.text"></p>
+  <div class="cta-row">
+    <a class="btn sea" data-text="contact.primaryLabel" data-attr="href=mailto:{site.email}"></a>
+    <a class="btn light" data-text="contact.secondaryCta.label" data-attr="href={contact.secondaryCta.href}"></a>
+  </div>
+</div></div></section>
+
+<!-- ================= FOOTER ================= -->
+<footer><div class="wrap"><div class="ft">
+  <div>
+    <a class="logo" href="#/"><i></i><span data-text="site.name"></span></a>
+    <p class="ft-about" data-text="site.tagline"></p>
+  </div>
+  <div>
+    <h4 data-text="footer.exploreTitle"></h4>
+    <nav aria-label="Footer" data-list="footer.links" data-template="tpl-footer-link"></nav>
+  </div>
+  <div>
+    <h4 data-text="footer.newsletter.title"></h4>
+    <p data-text="footer.newsletter.text"></p>
+    <div class="news">
+      <input type="email" id="nm" aria-label="Email address" data-attr="placeholder={footer.newsletter.placeholder}">
+      <button class="btn dark" id="nb" data-text="footer.newsletter.button"></button>
+    </div>
+    <div class="msg" id="nmsg" role="status"></div>
+  </div>
+</div>
+<p><span data-text="footer.copyright"></span><button class="hs" id="hs" aria-label="A hidden star">✦</button></p>
+<div class="toast" id="toast" role="status"></div>
+</div></footer>
+
+<!-- ================= TEMPLATES (one block per repeated item) =================
+     Each <template> is copied once per item in the matching data.json list.   -->
+<template id="tpl-nav-link"><a data-text="label" data-attr="href={href}|data-v={view}"></a></template>
+
+<template id="tpl-hero-line"><span><i data-html="."></i></span></template>
+
+<template id="tpl-float-card">
+  <div class="fc fl" data-class-from="slot" data-attr="data-speed={speed}">
+    <span class="ic" data-flag="icon" data-icon="icon"></span>
+    <strong><span class="dot" data-flag="dotTitle"></span><span data-text="title"></span></strong>
+    <small><span class="dot" data-flag="dotCaption"></span><span data-text="caption"></span></small>
+    <div class="bars" data-flag="bars" data-list="bars" data-template="tpl-bar"></div>
+  </div>
+</template>
+<template id="tpl-bar"><i data-attr="style=height:{.}%"></i></template>
+
+<template id="tpl-service-card">
+  <article class="card rv"><span class="ic" data-icon="icon"></span><h3 data-text="title"></h3><p data-text="summary"></p></article>
+</template>
+<template id="tpl-service-card-full">
+  <article class="card rv"><span class="ic" data-icon="icon"></span><h3 data-text="title"></h3><p data-text="summary"></p>
+    <ul class="feat" data-list="features" data-template="tpl-li"></ul></article>
+</template>
+<template id="tpl-li"><li data-text="."></li></template>
+
+<template id="tpl-step"><div class="step rv" data-attr="data-n={#}"><h3 data-html="title"></h3><p data-text="text"></p></div></template>
+
+<template id="tpl-benefit"><div><span class="dot"></span><h3 data-html="title"></h3><p data-text="text"></p></div></template>
+
+<template id="tpl-plan-card">
+  <article class="card price rv" data-class-flag="featured:rec">
+    <span class="tag" data-flag="featured" data-text="@pricingLabels.recommended"></span>
+    <h3 data-text="name"></h3>
+    <div class="amt"><span data-text="price"></span><small data-text="@pricingLabels.period"></small></div>
+    <div class="gst" data-text="@pricingLabels.gstNote"></div>
+    <ul class="feat" data-list="features" data-template="tpl-li"></ul>
+    <a class="btn" data-class-from="ctaStyle" data-attr="href=mailto:{@site.email}?subject={name}%20{@pricingLabels.mailSubjectSuffix}" data-tpl="{@pricingLabels.choose} {name}"></a>
+  </article>
+</template>
+
+<template id="tpl-faq"><details class="rv"><summary data-text="q"></summary><p data-text="a"></p></details></template>
+
+<template id="tpl-belief"><div class="card rv"><h3 data-html="title"></h3><p data-text="text"></p></div></template>
+
+<template id="tpl-stat"><div class="stat"><b><span class="cnt" data-attr="data-n={value}">0</span></b><span data-text="label"></span></div></template>
+
+<template id="tpl-footer-link"><a data-text="label" data-attr="href={href}"></a></template>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

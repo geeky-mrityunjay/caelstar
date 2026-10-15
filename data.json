@@ -1,0 +1,587 @@
+{
+  "_guide": {
+    "what_is_this": "Every word, link and list on the website lives in this file. Edit the values (the text in quotes on the right-hand side), save, and refresh the page.",
+    "do_not_change": "Do not rename the keys (the words on the left of each colon) and keep every comma, quote and bracket in place.",
+    "highlighted_words": "In headings, wrap words in **double stars** for bold and *single stars* for the highlighted italic style.",
+    "adding_items": "To add a service, plan, FAQ or step: copy one complete { ... } block inside its list, paste it after a comma, and edit the text.",
+    "icons": "Service icons use the names listed under \"icons\" below.",
+    "preview": "This file is loaded by script.js, so preview the site through a local server (run `npm start`), not by double-clicking index.html."
+  },
+  "site": {
+    "name": "CAELSTAR",
+    "tagline": "Build smarter. Manage better. Grow faster.",
+    "homeTitle": "CAELSTAR — Build Smarter. Manage Better. Grow Faster.",
+    "description": "CAELSTAR helps businesses manage websites, dashboards, CRMs, digital marketing, seller operations, apps and automation in one place.",
+    "email": "hello@caelstar.com"
+  },
+  "nav": [
+    {
+      "label": "Home",
+      "href": "#/",
+      "view": "home"
+    },
+    {
+      "label": "Services",
+      "href": "#/services",
+      "view": "services"
+    },
+    {
+      "label": "Pricing",
+      "href": "#/pricing",
+      "view": "pricing"
+    },
+    {
+      "label": "FAQ",
+      "href": "#/faq",
+      "view": "faq"
+    },
+    {
+      "label": "About",
+      "href": "#/about",
+      "view": "about"
+    }
+  ],
+  "headerCta": {
+    "label": "Get Started",
+    "href": "#contact"
+  },
+  "home": {
+    "hero": {
+      "headline": [
+        "**Build** Smarter.",
+        "*Manage Better.*",
+        "**Grow** Faster."
+      ],
+      "lead": "CAELSTAR helps businesses manage websites, smart dashboards, CRMs, digital marketing, seller operations, applications and automation in one place.",
+      "secondaryCta": {
+        "label": "Explore Our Services",
+        "href": "#/services"
+      },
+      "primaryCta": {
+        "label": "Get Started",
+        "href": "#contact"
+      },
+      "floatingCards": [
+        {
+          "slot": "c1",
+          "speed": "-.06",
+          "icon": "chart",
+          "title": "Analytics",
+          "caption": "Revenue this month",
+          "bars": [
+            40,
+            60,
+            48,
+            78,
+            100
+          ]
+        },
+        {
+          "slot": "c2",
+          "speed": ".08",
+          "icon": "userAdd",
+          "title": "CRM",
+          "caption": "12 new leads today",
+          "dotCaption": true
+        },
+        {
+          "slot": "c3",
+          "speed": ".05",
+          "icon": "mega",
+          "title": "Ads Manager",
+          "caption": "3 campaigns running"
+        },
+        {
+          "slot": "c4",
+          "speed": "-.09",
+          "icon": "bolt",
+          "title": "Automation",
+          "caption": "All workflows live",
+          "dotCaption": true
+        },
+        {
+          "slot": "c5",
+          "speed": ".04",
+          "title": "Dashboard",
+          "caption": "Orders, sellers and sites at a glance",
+          "dotTitle": true
+        }
+      ]
+    },
+    "marquee": [
+      "Websites",
+      "Dashboards",
+      "CRM",
+      "Datasets",
+      "Marketing",
+      "Ads",
+      "Sellers",
+      "Apps",
+      "Automation"
+    ],
+    "statement": "We take the messy parts of running a business and turn them into *one calm system.*",
+    "services": {
+      "title": "**Nine services.** *One team.*",
+      "sub": "Use one, or combine them all. Everything works together from day one.",
+      "link": {
+        "label": "See what is inside each service →",
+        "href": "#/services"
+      }
+    },
+    "steps": {
+      "title": "Up and running in **three** *steps.*",
+      "sub": "No long onboarding. No jargon.",
+      "items": [
+        {
+          "title": "**Tell us** where you are.",
+          "text": "A short call about your business, your tools and your goals."
+        },
+        {
+          "title": "**We set up** your stack.",
+          "text": "Site, CRM, dashboards and ads, built to work as one."
+        },
+        {
+          "title": "**You** *watch it grow.*",
+          "text": "Monthly reports show what is working and what to do next."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Why teams pick **CAELSTAR.**",
+      "items": [
+        {
+          "title": "**One team**, one roadmap",
+          "text": "Websites, data and marketing planned together."
+        },
+        {
+          "title": "**Clear** monthly *pricing*",
+          "text": "Plans in rupees, with GST shown separately."
+        },
+        {
+          "title": "Built to **scale**",
+          "text": "Start small, add apps and automation later."
+        },
+        {
+          "title": "Decisions from *data*",
+          "text": "Live dashboards, not guesswork."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Plans that **grow** *with you.*",
+      "sub": "GST extra. Cancel or upgrade any month.",
+      "link": {
+        "label": "Compare every plan →",
+        "href": "#/pricing"
+      }
+    },
+    "faq": {
+      "title": "Quick **answers.**",
+      "link": {
+        "label": "Read all FAQs →",
+        "href": "#/faq"
+      },
+      "howMany": 3
+    }
+  },
+  "servicesPage": {
+    "title": "**Services** built to *run your business.*",
+    "sub": "Nine connected services, from your website to your seller network.",
+    "statement": "Start with one service. *Add the rest* when you are ready.",
+    "link": {
+      "label": "See plans →",
+      "href": "#/pricing"
+    }
+  },
+  "pricingPage": {
+    "title": "**Simple** plans, *honest pricing.*",
+    "sub": "Pick a plan, upgrade when you grow. All prices are per month and **GST extra**.",
+    "seller": {
+      "badge": "By invitation only",
+      "title": "**Seller** *programme.*",
+      "text": "Selling through a marketplace, or running one? Seller access opens only after you request an invitation and we approve it.",
+      "features": [
+        "Guided seller onboarding and KYC",
+        "Listing, order and stock tracking",
+        "Payout and performance reports",
+        "Dedicated seller support"
+      ],
+      "form": {
+        "title": "**Request** your invitation",
+        "hiddenPrice": "₹ ••,•••",
+        "note": "Seller pricing is shared once your invitation is approved. GST extra.",
+        "namePlaceholder": "Your name",
+        "emailPlaceholder": "Work email",
+        "businessPlaceholder": "Business or marketplace",
+        "button": "Request invitation",
+        "errorMessage": "Add your name and a valid email to request an invitation.",
+        "successMessage": "Your email app will open with the request. Send it and we will reply if approved.",
+        "mailSubject": "Seller invitation request"
+      }
+    }
+  },
+  "faqPage": {
+    "title": "**Questions?** *Answered.*",
+    "sub": "The short answers to what people ask us most.",
+    "sideTitle": "Still **unsure?** *Ask us.*",
+    "sideLink": {
+      "label": "Contact CAELSTAR →",
+      "href": "#contact"
+    }
+  },
+  "aboutPage": {
+    "title": "**Tools** should *work for you.*",
+    "sub": "CAELSTAR exists so owners spend their time on the business, not on the software around it.",
+    "statement": "We are a **small team** that builds the *digital backbone* of growing companies.",
+    "beliefs": {
+      "title": "What we **believe.**",
+      "items": [
+        {
+          "title": "**Clarity**",
+          "text": "Plain words, clear prices, no surprises."
+        },
+        {
+          "title": "**Ownership**",
+          "text": "We treat your goals as our own deadlines."
+        },
+        {
+          "title": "**Speed**",
+          "text": "Small steps shipped fast beat big plans."
+        },
+        {
+          "title": "**Care**",
+          "text": "We stay after launch, because that is when growth starts."
+        }
+      ]
+    },
+    "numbers": {
+      "title": "CAELSTAR in *numbers.*",
+      "items": [
+        {
+          "value": 9,
+          "label": "connected services"
+        },
+        {
+          "value": 3,
+          "label": "simple monthly plans"
+        },
+        {
+          "value": 1,
+          "label": "team behind it all"
+        }
+      ]
+    }
+  },
+  "pricingLabels": {
+    "period": "/month",
+    "gstNote": "GST extra",
+    "recommended": "Recommended",
+    "choose": "Choose",
+    "mailSubjectSuffix": "plan"
+  },
+  "services": [
+    {
+      "title": "Website AMC & Maintenance",
+      "icon": "wrench",
+      "summary": "Keep your site fast, secure and current.",
+      "features": [
+        "Security patches and backups",
+        "Content and design updates",
+        "Uptime and speed monitoring"
+      ]
+    },
+    {
+      "title": "Smart Dashboards & Business Intelligence",
+      "icon": "chart",
+      "summary": "See sales, stock and teams in one live view.",
+      "features": [
+        "Custom KPI dashboards",
+        "Automated weekly reports",
+        "Connects to your existing data"
+      ]
+    },
+    {
+      "title": "CRM Development & Management",
+      "icon": "users",
+      "summary": "Track every lead from first call to repeat order.",
+      "features": [
+        "Custom pipelines and stages",
+        "Follow-up reminders",
+        "Team access and roles"
+      ]
+    },
+    {
+      "title": "Personalized Dataset Creation",
+      "icon": "db",
+      "summary": "Clean, structured data built around your goals.",
+      "features": [
+        "Market and lead datasets",
+        "Cleaning and de-duplication",
+        "Delivered in Excel or API"
+      ]
+    },
+    {
+      "title": "Digital & Social Media Marketing",
+      "icon": "mega",
+      "summary": "Steady content that brings the right customers in.",
+      "features": [
+        "Content calendar and posting",
+        "SEO and social growth",
+        "Monthly performance review"
+      ]
+    },
+    {
+      "title": "Ads Manager",
+      "icon": "target",
+      "summary": "Paid campaigns you can measure to the rupee.",
+      "features": [
+        "Google and Meta ad setup",
+        "Budget and audience tuning",
+        "Conversion tracking"
+      ]
+    },
+    {
+      "title": "Seller Management",
+      "icon": "store",
+      "summary": "Onboard, monitor and support your marketplace sellers.",
+      "features": [
+        "Seller onboarding and KYC flow",
+        "Listing and order tracking",
+        "Payout and performance reports"
+      ]
+    },
+    {
+      "title": "App Development",
+      "icon": "phone",
+      "summary": "Mobile and web apps built around your customers.",
+      "features": [
+        "Android, iOS and web",
+        "Clean design, fast builds",
+        "Launch and ongoing support"
+      ]
+    },
+    {
+      "title": "Business Automation",
+      "icon": "bolt",
+      "summary": "Remove repeat tasks so your team does the real work.",
+      "features": [
+        "Invoice and notification flows",
+        "WhatsApp and email automation",
+        "Connects your tools together"
+      ]
+    }
+  ],
+  "plans": [
+    {
+      "name": "Starter",
+      "price": "₹7,000",
+      "featured": false,
+      "ctaStyle": "light",
+      "features": [
+        "Website AMC and maintenance",
+        "Basic social media upkeep",
+        "Monthly summary report",
+        "Email support"
+      ]
+    },
+    {
+      "name": "Gold",
+      "price": "₹15,000",
+      "featured": true,
+      "ctaStyle": "dark",
+      "features": [
+        "Everything in Starter",
+        "CRM setup and management",
+        "Smart dashboard",
+        "Ads management",
+        "Priority support"
+      ]
+    },
+    {
+      "name": "Diamond",
+      "price": "₹30,000",
+      "featured": false,
+      "ctaStyle": "light",
+      "features": [
+        "Everything in Gold",
+        "Seller management",
+        "App development support",
+        "Business automation",
+        "Dedicated account manager"
+      ]
+    }
+  ],
+  "comparison": [
+    {
+      "label": "Website AMC & maintenance",
+      "values": [
+        "✓",
+        "✓",
+        "✓"
+      ]
+    },
+    {
+      "label": "Social media upkeep",
+      "values": [
+        "Basic",
+        "Full",
+        "Full"
+      ]
+    },
+    {
+      "label": "CRM setup & management",
+      "values": [
+        "–",
+        "✓",
+        "✓"
+      ]
+    },
+    {
+      "label": "Smart dashboard",
+      "values": [
+        "–",
+        "✓",
+        "✓"
+      ]
+    },
+    {
+      "label": "Ads management",
+      "values": [
+        "–",
+        "✓",
+        "✓"
+      ]
+    },
+    {
+      "label": "Seller management",
+      "values": [
+        "–",
+        "–",
+        "✓"
+      ]
+    },
+    {
+      "label": "App development support",
+      "values": [
+        "–",
+        "–",
+        "✓"
+      ]
+    },
+    {
+      "label": "Business automation",
+      "values": [
+        "–",
+        "–",
+        "✓"
+      ]
+    },
+    {
+      "label": "Support",
+      "values": [
+        "Email",
+        "Priority",
+        "Dedicated manager"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "How soon can we start?",
+      "a": "Most projects begin within a week of our first call."
+    },
+    {
+      "q": "Can I change plans later?",
+      "a": "Yes. You can upgrade or downgrade at the start of any month."
+    },
+    {
+      "q": "Is GST included in the price?",
+      "a": "No. Prices are before GST, which is added to your invoice."
+    },
+    {
+      "q": "Can I buy a single service?",
+      "a": "Yes. Tell us what you need and we will suggest the closest plan or a custom quote."
+    },
+    {
+      "q": "Do I need to sign a long contract?",
+      "a": "No. Plans are billed monthly."
+    },
+    {
+      "q": "Who owns my website, data and accounts?",
+      "a": "You do. Everything we build and collect is yours."
+    },
+    {
+      "q": "What happens after launch?",
+      "a": "We keep maintaining, reporting and improving, based on your plan."
+    },
+    {
+      "q": "How do I join the seller programme?",
+      "a": "Seller access is by invitation. Request one on the Pricing page and we will email you if approved."
+    },
+    {
+      "q": "How do we get started?",
+      "a": "Press Get Started, email us, and we will set up a short call."
+    }
+  ],
+  "story": {
+    "hint": "Scroll to connect the stars.",
+    "ariaLabel": "Nine services connecting like a constellation as you scroll",
+    "doneTitle": "**All** *connected.*",
+    "doneText": "One team, nine services, one calm system."
+  },
+  "contact": {
+    "title": "**Ready** to *grow?*",
+    "text": "Tell us what you are building. We will reply with a plan and a clear price.",
+    "primaryLabel": "Get Started",
+    "secondaryCta": {
+      "label": "View services",
+      "href": "#/services"
+    }
+  },
+  "footer": {
+    "exploreTitle": "Explore",
+    "links": [
+      {
+        "label": "Services",
+        "href": "#/services"
+      },
+      {
+        "label": "Pricing",
+        "href": "#/pricing"
+      },
+      {
+        "label": "FAQ",
+        "href": "#/faq"
+      },
+      {
+        "label": "About",
+        "href": "#/about"
+      }
+    ],
+    "newsletter": {
+      "title": "Newsletter",
+      "text": "One useful growth tip, now and then.",
+      "placeholder": "you@company.com",
+      "button": "Subscribe",
+      "successMessage": "Thanks, you are on the list.",
+      "errorMessage": "Enter a valid email address."
+    },
+    "copyright": "© 2026 CAELSTAR. All rights reserved."
+  },
+  "easterEggs": {
+    "logoToast": "You found a star. Nice eye ✦",
+    "hiddenStarToast": "The hidden star is yours. Say hi at {site.email}"
+  },
+  "icons": {
+    "bolt": "M13 2L4 14h7l-1 8 9-12h-7z",
+    "wrench": "M14 6a4 4 0 005 5l-9 9a2 2 0 01-3-3l9-9a4 4 0 00-2-2z",
+    "chart": "M4 20V10M10 20V4M16 20v-7M22 20H2",
+    "users": "M9 11a3.500 3.500 0 100-7 3.500 3.500 0 000 7zM2.500 20c.8-4 3.400-5.500 6.500-5.500s5.700 1.500 6.500 5.500M17 5a3 3 0 010 6",
+    "db": "M4 6c0-1.700 3.600-3 8-3s8 1.300 8 3-3.600 3-8 3-8-1.300-8-3zM4 6v12c0 1.700 3.600 3 8 3s8-1.300 8-3V6M4 12c0 1.700 3.600 3 8 3s8-1.300 8-3",
+    "mega": "M3 11l14-6v14L3 13zM7 14l1.500 6",
+    "target": "M12 21a9 9 0 100-18 9 9 0 000 18zM12 16a4 4 0 100-8 4 4 0 000 8z",
+    "store": "M4 9l1-5h14l1 5M4 9v11h16V9M4 9c0 2 3 2 4 0 1 2 3 2 4 0 1 2 3 2 4 0 1 2 4 2 4 0",
+    "phone": "M7 2h10a1 1 0 011 1v18a1 1 0 01-1 1H7a1 1 0 01-1-1V3a1 1 0 011-1zM11 18h2",
+    "userAdd": "M12.5 8a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zM2.5 20c.8-4 3.4-5.5 6.5-5.5s5.7 1.5 6.5 5.5M17 6v6M20 9h-6"
+  }
+}
