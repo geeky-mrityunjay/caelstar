@@ -530,16 +530,128 @@
       return;
     }
     if (typeof window.caelstarPay === 'function') {
-      window.caelstarPay({ service: sv.id, package: p[0], amount: amount, unit: sv.u, quantity: qty });
+      window.caelstarPay({ service: sv.id, serviceObj: sv, package: p[0], amount: amount, unit: p[3] || sv.u, quantity: qty });
       return;
     }
-    box.innerHTML = `<div class="mh">${catU('mh')}</div><div class="mb"><div class="demo">${catU('demo')}</div><div class="row"><span>${catN(sv, 't')}</span></div><div class="row"><span>${p[0]}${qty > 1 ? ' × ' + qty : ''} ${catU('pkgw')}</span><b>${catInr(amount)}</b></div><div class="gst">${catU('gstinv')}</div><button class="btn sea" id="catOk">${catU('pay')} ${catInr(amount)}</button><button class="btn light" id="catX">${catU('cancel')}</button></div>`;
+
+    const title = catL === 'hi' ? 'Razorpay सुरक्षित चेकआउट' : 'Razorpay Secure Checkout';
+    const nameLabel = catL === 'hi' ? 'आपका नाम' : 'Your name';
+    const emailLabel = catL === 'hi' ? 'ईमेल' : 'Email';
+    const phoneLabel = catL === 'hi' ? 'फ़ोन नंबर' : 'Phone number';
+
+    box.innerHTML = `<div class="mh">${escapeHtml(title)}</div>` +
+      `<form class="mb gs" id="rzpForm" novalidate>` +
+      `<div class="row"><span>${escapeHtml(catN(sv, 't'))}</span></div>` +
+      `<div class="row"><span>${escapeHtml(p[0])}${qty > 1 ? ' × ' + qty : ''} ${escapeHtml(catU('pkgw'))}</span><b>${catInr(amount)}</b></div>` +
+      `<div class="gst">${escapeHtml(catU('gstinv'))}</div>` +
+      `<label for="rzpName">${escapeHtml(nameLabel)}</label><input id="rzpName" autocomplete="name" required>` +
+      `<label for="rzpEmail">${escapeHtml(emailLabel)}</label><input id="rzpEmail" type="email" autocomplete="email" required>` +
+      `<label for="rzpPhone">${escapeHtml(phoneLabel)}</label><input id="rzpPhone" type="tel" autocomplete="tel" required>` +
+      `<div class="msg" id="rzpMsg" role="status"></div>` +
+      `<button class="btn sea" type="submit" id="catOk">${escapeHtml(catU('pay'))} ${catInr(amount)}</button>` +
+      `<button class="btn light" type="button" id="catX">${escapeHtml(catU('cancel'))}</button>` +
+      `</form>`;
     modal.classList.add('on');
     $('#catX').onclick = close;
-    $('#catOk').onclick = () => {
-      box.innerHTML = `<div class="mh">${catU('ok')}</div><div class="mb"><div style="font-size:40px">✅</div><p style="margin:0">${catU('thanks').replace('{p}', p[0])}</p><button class="btn dark" id="catX">${catU('done')}</button></div>`;
-      $('#catX').onclick = close;
-    };
+
+    $('#rzpForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = $('#rzpName').value.trim();
+      const email = $('#rzpEmail').value.trim();
+      const phone = $('#rzpPhone').value.trim();
+      const msgEl = $('#rzpMsg');
+      const payBtn = $('#catOk');
+
+      if (!name) { setMessage(msgEl, catL === 'hi' ? 'कृपया अपना नाम दर्ज करें।' : 'Please enter your name.', 'err'); return; }
+      if (!EMAIL_PATTERN.test(email)) { setMessage(msgEl, catL === 'hi' ? 'कृपया सही ईमेल दर्ज करें।' : 'Please enter a valid email address.', 'err'); return; }
+      if (phone.replace(/\D/g, '').length < 10) { setMessage(msgEl, catL === 'hi' ? 'कृपया 10 अंकों का फ़ोन नंबर दर्ज करें।' : 'Please enter a valid 10-digit phone number.', 'err'); return; }
+
+      if (typeof window.Razorpay !== 'function') {
+        setMessage(msgEl, 'Razorpay SDK failed to load. Please check your internet connection.', 'err');
+        return;
+      }
+
+      payBtn.disabled = true;
+      const originalText = payBtn.textContent;
+      payBtn.textContent = catL === 'hi' ? 'प्रोसेस हो रहा है…' : 'Creating order…';
+      setMessage(msgEl, '', '');
+
+      try {
+        const orderRes = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceId: sv.id,
+            packageName: p[0],
+            quantity: qty,
+            customer: { name, email, phone }
+          })
+        });
+        const orderData = await orderRes.json();
+        if (!orderRes.ok || !orderData.orderId) {
+          throw new Error(orderData.error || 'Could not initiate payment order.');
+        }
+
+        const rzp = new window.Razorpay({
+          key: orderData.keyId,
+          amount: orderData.amount,
+          currency: orderData.currency || 'INR',
+          name: data.site.name,
+          description: `${catN(sv, 't')} — ${p[0]}${qty > 1 ? ' (×' + qty + ')' : ''}`,
+          order_id: orderData.orderId,
+          prefill: { name, email, contact: phone },
+          theme: { color: '#83CFC0' },
+          modal: {
+            ondismiss: () => {
+              payBtn.disabled = false;
+              payBtn.textContent = originalText;
+            }
+          },
+          handler: async function (response) {
+            payBtn.textContent = catL === 'hi' ? 'सत्यापित किया जा रहा है…' : 'Verifying payment…';
+            try {
+              const verifyRes = await fetch('/api/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+              const verifyData = await verifyRes.json();
+              if (!verifyRes.ok || !verifyData.verified) {
+                throw new Error(verifyData.error || 'Payment verification failed.');
+              }
+              box.innerHTML = `<div class="mh">${escapeHtml(catU('ok'))}</div>` +
+                `<div class="mb"><div style="font-size:40px">✅</div>` +
+                `<p style="margin:0">${escapeHtml(catU('thanks').replace('{p}', p[0]))}</p>` +
+                `<div class="gst">Payment ID: <b>${escapeHtml(response.razorpay_payment_id)}</b><br>Order ID: <b>${escapeHtml(response.razorpay_order_id)}</b></div>` +
+                `<button class="btn dark" id="catX">${escapeHtml(catU('done'))}</button></div>`;
+              $('#catX').onclick = close;
+            } catch (verifyErr) {
+              setMessage(msgEl, verifyErr.message || 'Verification error. Please contact support.', 'err');
+              payBtn.disabled = false;
+              payBtn.textContent = originalText;
+            }
+          }
+        });
+
+        rzp.on('payment.failed', function (failResp) {
+          const reason = (failResp && failResp.error && failResp.error.description) || 'Payment failed. Please try again.';
+          setMessage(msgEl, reason, 'err');
+          payBtn.disabled = false;
+          payBtn.textContent = originalText;
+        });
+
+        rzp.open();
+      } catch (err) {
+        setMessage(msgEl, err.message || 'Unable to start checkout.', 'err');
+        payBtn.disabled = false;
+        payBtn.textContent = originalText;
+      }
+    });
+    setTimeout(() => { const inp = $('#rzpName'); if (inp) inp.focus(); }, 50);
   }
 
   /* ---------------------------------------------------------------
