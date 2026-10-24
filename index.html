@@ -7,7 +7,7 @@
 <meta name="description" content="">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,7 +27,8 @@
   <a class="logo" href="#/" data-attr="aria-label={site.name} home"><i></i><span data-text="site.name"></span></a>
   <nav class="menu" id="menu" aria-label="Main" data-list="nav" data-template="tpl-nav-link"></nav>
   <div class="right">
-    <a class="btn dark" data-s data-text="headerCta.label" data-attr="href={headerCta.href}"></a>
+    <button class="btn light" id="lg" type="button" aria-label="Language">🌐 <span id="lgn">EN</span></button>
+    <a class="btn dark" data-gs data-text="headerCta.label" data-attr="href={headerCta.href}"></a>
     <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
   </div>
 </div></header>
@@ -40,10 +41,10 @@
   <!-- ---------- HERO SECTION ---------- -->
   <section class="hero"><div class="wrap"><div class="panel" id="panel">
     <h1 data-list="home.hero.headline" data-template="tpl-hero-line"></h1>
-    <p class="lead" data-text="home.hero.lead"></p>
+    <p class="lead" data-html="home.hero.lead"></p>
     <div class="cta-row">
       <a class="btn light" data-text="home.hero.secondaryCta.label" data-attr="href={home.hero.secondaryCta.href}"></a>
-      <a class="btn dark" data-s data-text="home.hero.primaryCta.label" data-attr="href={home.hero.primaryCta.href}"></a>
+      <a class="btn dark" data-gs data-text="home.hero.primaryCta.label" data-attr="href={home.hero.primaryCta.href}"></a>
     </div>
     <div class="stage">
       <!-- decorative globe (inline SVG art; colours are fixed here) -->
@@ -72,7 +73,7 @@
   <section class="pt-0"><div class="wrap">
     <h2 class="rv" data-html="home.services.title"></h2>
     <p class="sub rv" data-text="home.services.sub"></p>
-    <div class="grid g3" data-list="services" data-template="tpl-service-card"></div>
+    <div class="cs"><div class="grid" data-tiles></div></div>
     <a class="more rv" data-text="home.services.link.label" data-attr="href={home.services.link.href}"></a>
   </div></section>
 
@@ -94,14 +95,6 @@
     <div class="ben rv" data-list="home.benefits.items" data-template="tpl-benefit"></div>
   </div></section>
 
-  <!-- ---------- PRICING PREVIEW ---------- -->
-  <section class="pt-0"><div class="wrap">
-    <h2 class="rv" data-html="home.pricing.title"></h2>
-    <p class="sub rv" data-text="home.pricing.sub"></p>
-    <div class="grid g3" data-list="plans" data-template="tpl-plan-card"></div>
-    <a class="more rv" data-text="home.pricing.link.label" data-attr="href={home.pricing.link.href}"></a>
-  </div></section>
-
   <!-- ---------- QUICK FAQ ---------- -->
   <section class="pt-0"><div class="wrap split">
     <div>
@@ -111,6 +104,21 @@
     <!-- shows the first N questions of data.json > faq (N = home.faq.howMany) -->
     <div data-list="faq" data-limit-from="home.faq.howMany" data-template="tpl-faq"></div>
   </div></section>
+<!-- ================= SCROLL STORY (constellation) ================= -->
+<section id="storysec" class="story-section"><div class="wrap"><div class="story" id="story"><div class="stk">
+  <p class="sk" data-text="story.hint"></p>
+  <div class="orb">
+    <ol class="svl" id="svl" aria-hidden="true"></ol>
+    <svg id="cst" viewBox="90 32 380 396" role="img" data-attr="aria-label={story.ariaLabel}"></svg>
+  </div>
+  <div class="cap"><span class="cc" id="cc"></span><div class="cn" id="cn"></div><p id="cd"></p></div>
+</div></div></div></section>
+
+</div>
+
+<!-- ================= PAGE: SERVICE DETAIL  (#service-ID) — filled by script.js from data.json > catalog ================= -->
+<div class="view" id="v-service">
+  <section class="ph"><div class="wrap cs" id="svc"></div></section>
 </div>
 
 <!-- ================= PAGE: SERVICES  (#/services) ================= -->
@@ -121,52 +129,12 @@
     <div class="mini"><svg viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice" aria-hidden="true" data-speed="-.08"><g fill="none" stroke="#171717" stroke-opacity=".18"><circle cx="500" cy="190" r="70"/><circle cx="500" cy="190" r="130"/><circle cx="500" cy="190" r="190"/><circle cx="500" cy="190" r="250"/></g><circle cx="500" cy="190" r="34" fill="#171717"/><circle cx="500" cy="190" r="12" fill="#83CFC0"/><circle cx="630" cy="190" r="7" fill="#171717"/><circle cx="310" cy="120" r="7" fill="#83CFC0"/><circle cx="420" cy="320" r="7" fill="#171717"/><circle cx="690" cy="90" r="7" fill="#83CFC0"/><circle cx="760" cy="260" r="7" fill="#171717"/><circle cx="240" cy="250" r="7" fill="#171717"/></svg></div>
   </div></section>
   <section class="pt-md"><div class="wrap">
-    <div class="grid g3 mt-0" data-list="services" data-template="tpl-service-card-full"></div>
+    <div class="cs"><div class="grid" data-tiles></div></div>
   </div></section>
   <section class="pt-0"><div class="wrap">
     <p class="scrub" data-scrub="servicesPage.statement"></p>
     <a class="more" data-text="servicesPage.link.label" data-attr="href={servicesPage.link.href}"></a>
   </div></section>
-</div>
-
-<!-- ================= PAGE: PRICING  (#/pricing) ================= -->
-<div class="view" id="v-pricing">
-  <section class="ph"><div class="wrap">
-    <h1 data-html="pricingPage.title"></h1>
-    <p class="sub" data-html="pricingPage.sub"></p>
-  </div></section>
-
-  <!-- ---------- PLAN CARDS + COMPARISON TABLE ---------- -->
-  <section class="pt-sm"><div class="wrap">
-    <div class="grid g3 mt-0" data-list="plans" data-template="tpl-plan-card"></div>
-    <div class="tw rv"><table>
-      <thead><tr id="cmpHead"></tr></thead>
-      <tbody id="cmp"></tbody>
-    </table></div>
-  </div></section>
-
-  <!-- ---------- SELLER PROGRAMME ---------- -->
-  <section class="pt-0"><div class="wrap"><div class="seller rv">
-    <div>
-      <span class="tag sea" data-text="pricingPage.seller.badge"></span>
-      <h2 data-html="pricingPage.seller.title"></h2>
-      <p class="sub" data-text="pricingPage.seller.text"></p>
-      <ul class="feat" data-list="pricingPage.seller.features" data-template="tpl-li"></ul>
-    </div>
-    <div class="sf">
-      <div class="lk">
-        <span><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></span>
-        <h3 data-html="pricingPage.seller.form.title"></h3>
-      </div>
-      <div class="blur" aria-hidden="true"><span data-text="pricingPage.seller.form.hiddenPrice"></span><small data-text="pricingLabels.period"></small></div>
-      <small data-text="pricingPage.seller.form.note"></small>
-      <input id="sn" aria-label="Your name" autocomplete="name" data-attr="placeholder={pricingPage.seller.form.namePlaceholder}">
-      <input id="se" type="email" aria-label="Work email" autocomplete="email" data-attr="placeholder={pricingPage.seller.form.emailPlaceholder}">
-      <input id="sbz" aria-label="Business or marketplace" data-attr="placeholder={pricingPage.seller.form.businessPlaceholder}">
-      <button class="btn dark" id="sb" data-text="pricingPage.seller.form.button"></button>
-      <div class="msg" id="smsg" role="status"></div>
-    </div>
-  </div></div></section>
 </div>
 
 <!-- ================= PAGE: FAQ  (#/faq) ================= -->
@@ -203,22 +171,17 @@
 </div>
 
 </main>
-
-<!-- ================= SCROLL STORY (constellation) ================= -->
-<section id="storysec" class="story-section"><div class="wrap"><div class="story" id="story"><div class="stk">
-  <p class="sk" data-text="story.hint"></p>
-  <svg id="cst" viewBox="0 0 800 460" role="img" data-attr="aria-label={story.ariaLabel}"></svg>
-  <div class="cap"><span class="cc" id="cc"></span><div class="cn" id="cn"></div><p id="cd"></p></div>
-</div></div></div></section>
+<div class="cs"><div class="modal" id="modal" role="dialog" aria-modal="true"><div class="box" id="box"></div></div></div>
 
 <!-- ================= CONTACT / FINAL CTA ================= -->
 <section id="contact" class="pt-0"><div class="wrap"><div class="final rv">
   <h2 data-html="contact.title"></h2>
   <p data-text="contact.text"></p>
   <div class="cta-row">
-    <a class="btn sea" data-text="contact.primaryLabel" data-attr="href=mailto:{site.email}"></a>
+    <a class="btn sea" data-gs href="#contact" data-text="contact.primaryLabel"></a>
     <a class="btn light" data-text="contact.secondaryCta.label" data-attr="href={contact.secondaryCta.href}"></a>
   </div>
+  <p class="callus">Or call us on <a data-text="site.phone" data-attr="href={site.phoneHref}"></a></p>
 </div></div></section>
 
 <!-- ================= FOOTER ================= -->
@@ -226,6 +189,7 @@
   <div>
     <a class="logo" href="#/"><i></i><span data-text="site.name"></span></a>
     <p class="ft-about" data-text="site.tagline"></p>
+    <p class="ft-contact"><a data-text="site.phone" data-attr="href={site.phoneHref}"></a><a data-text="site.email" data-attr="href=mailto:{site.email}"></a></p>
   </div>
   <div>
     <h4 data-text="footer.exploreTitle"></h4>
@@ -274,16 +238,6 @@
 
 <template id="tpl-benefit"><div><span class="dot"></span><h3 data-html="title"></h3><p data-text="text"></p></div></template>
 
-<template id="tpl-plan-card">
-  <article class="card price rv" data-class-flag="featured:rec">
-    <span class="tag" data-flag="featured" data-text="@pricingLabels.recommended"></span>
-    <h3 data-text="name"></h3>
-    <div class="amt"><span data-text="price"></span><small data-text="@pricingLabels.period"></small></div>
-    <div class="gst" data-text="@pricingLabels.gstNote"></div>
-    <ul class="feat" data-list="features" data-template="tpl-li"></ul>
-    <a class="btn" data-class-from="ctaStyle" data-attr="href=mailto:{@site.email}?subject={name}%20{@pricingLabels.mailSubjectSuffix}" data-tpl="{@pricingLabels.choose} {name}"></a>
-  </article>
-</template>
 
 <template id="tpl-faq"><details class="rv"><summary data-text="q"></summary><p data-text="a"></p></details></template>
 

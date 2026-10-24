@@ -11,7 +11,7 @@
    STATE FLOW
      data.json --fetch--> `data` (read-only object)
         -> renderContent():  fills every data-* mount point in index.html
-        -> renderMarquee / renderComparison / renderScrubText / renderStory:
+        -> renderMarquee / renderScrubText / renderStory:
            the few widgets that need custom markup
         -> initMotion():     smooth scroll + reveal/counter observers
         -> initRouter():     shows one .view per URL hash (#/, #/services ...)
@@ -161,19 +161,6 @@
     $('#mq1').innerHTML = ('<span>' + words + '</span>').repeat(3);
   }
 
-  // Plan comparison table. "✓" and "–" get tick / dash styling; the featured plan's column is tinted.
-  function renderComparison() {
-    const plans = data.plans;
-    const featured = plans.findIndex(p => p.featured);
-    $('#cmpHead').innerHTML = '<th></th>' + plans.map((p, i) =>
-      '<th' + (i === featured ? ' class="g"' : '') + '>' + escapeHtml(p.name) + '</th>').join('');
-    $('#cmp').innerHTML = data.comparison.map(row =>
-      '<tr><td>' + escapeHtml(row.label) + '</td>' + row.values.map((value, i) => {
-        const cls = [i === featured ? 'g' : '', value === '✓' ? 'y' : value === '–' ? 'n' : ''].join(' ').trim();
-        return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + escapeHtml(value) + '</td>';
-      }).join('') + '</tr>').join('');
-  }
-
   // Statements whose words light up as you scroll. Markers: **bold**, *italic*.
   function renderScrubText() {
     $$('[data-scrub]').forEach(el => {
@@ -193,28 +180,36 @@
     });
   }
 
-  // Constellation SVG: background dust, connecting lines, one star per service.
+  // Service orbit: Caelstar core, one node per service on a ring, plus a side list. All names come from data.catalog.services.
+  const ORBIT = { cx: 280, cy: 230, r: 170 };
+  const orbitPoint = (i, n) => {
+    const a = -Math.PI / 2 + (i / n) * Math.PI * 2;
+    return [ORBIT.cx + ORBIT.r * Math.cos(a), ORBIT.cy + ORBIT.r * Math.sin(a)];
+  };
   let starCount = 0;
   function renderStory() {
-    starCount = Math.min(data.services.length, STAR_POINTS.length);
-    let svg = '';
-    for (let i = 0; i < 46; i++) {
-      svg += '<circle cx="' + ((i * 127) % 800) + '" cy="' + ((i * 73 + i * i * 11) % 460) + '" r="' +
-             (0.6 + (i % 3) * 0.5) + '" fill="#fff" opacity="' + (0.15 + (i % 4) * 0.1) + '"/>';
-    }
-    for (let i = 0; i < starCount - 1; i++) {
-      const [x1, y1] = STAR_POINTS[i], [x2, y2] = STAR_POINTS[i + 1];
-      const length = Math.hypot(x2 - x1, y2 - y1);
-      svg += '<line id="ln' + i + '" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 +
-             '" stroke="#83CFC0" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="' + length +
-             '" stroke-dashoffset="' + length + '" data-l="' + length + '"/>';
-    }
+    starCount = data.catalog.services.length;
+    const { cx, cy, r } = ORBIT, circ = 2 * Math.PI * r;
+    let svg = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#fff" stroke-opacity=".12" stroke-dasharray="2 7"/>' +
+              '<circle id="orbp" cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#83CFC0" stroke-width="2" stroke-linecap="round"' +
+              ' transform="rotate(-90 ' + cx + ' ' + cy + ')" stroke-dasharray="' + circ + '" stroke-dashoffset="' + circ + '" data-l="' + circ + '"/>';
     for (let i = 0; i < starCount; i++) {
-      svg += '<g class="sg" id="sg' + i + '" style="opacity:0" transform="translate(' + STAR_POINTS[i][0] + ' ' +
-             STAR_POINTS[i][1] + ')"><circle class="h" r="16" fill="#83CFC0" opacity=".3"/>' +
-             '<circle r="6" fill="#fff"/><circle r="2.6" fill="#83CFC0"/></g>';
+      const [x, y] = orbitPoint(i, starCount);
+      svg += '<line id="ln' + i + '" x1="' + cx + '" y1="' + cy + '" x2="' + x + '" y2="' + y + '" stroke="#83CFC0" stroke-opacity=".55" stroke-width="1.2"' +
+             ' stroke-dasharray="' + r + '" stroke-dashoffset="' + r + '" data-l="' + r + '"/>';
+    }
+    svg += '<g id="core"><circle class="h" cx="' + cx + '" cy="' + cy + '" r="46" fill="#83CFC0" opacity=".18"/>' +
+           '<circle cx="' + cx + '" cy="' + cy + '" r="30" fill="#83CFC0"/>' +
+           '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#161616" letter-spacing=".5">' +
+           escapeHtml(data.site.name.toUpperCase().slice(0, 9)) + '</text></g>';
+    for (let i = 0; i < starCount; i++) {
+      const [x, y] = orbitPoint(i, starCount);
+      svg += '<g class="sg" id="sg' + i + '" style="opacity:.28" transform="translate(' + x + ' ' + y + ')">' +
+             '<circle class="h" r="20" fill="#83CFC0" opacity=".3"/><circle r="15" fill="#161616" stroke="#83CFC0" stroke-width="1.5"/>' +
+             '<text y="4.5" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">' + (i + 1) + '</text></g>';
     }
     $('#cst').innerHTML = svg;
+    $('#svl').innerHTML = data.catalog.services.map((sv, i) => '<li id="sl' + i + '"><i>' + (i + 1) + '</i>' + escapeHtml(catN(sv, 't')) + '</li>').join('');
   }
 
   // Runs everything above, in order.
@@ -222,7 +217,6 @@
     renderHead();
     bindContent(document, data);
     renderMarquee();
-    renderComparison();
     renderScrubText();
     renderStory();
   }
@@ -294,17 +288,21 @@
 
   function currentViewName() {
     const names = data.nav.map(n => n.view).filter(v => v !== 'home');
-    const match = location.hash.match(new RegExp('^#/(' + names.join('|') + ')'));
+    const hash = location.hash.replace(/^#\/?/, '');
+    if (/^service-[a-z]+$/.test(hash)) return 'service';
+    const match = hash.match(new RegExp('^(' + names.join('|') + ')'));
     return match ? match[1] : 'home';
   }
 
   function route() {
     const name = currentViewName();
     $$('.view').forEach(v => v.classList.toggle('on', v.id === 'v-' + name));
-    $$('.menu a').forEach(a => a.classList.toggle('on', a.dataset.v === name));
+    $$('.menu a').forEach(a => a.classList.toggle('on', a.dataset.v === (name === 'service' ? 'services' : name)));
 
+    if (name === 'service') renderService(location.hash.replace(/^#\/?service-/, ''));
     const navItem = data.nav.find(n => n.view === name);
-    document.title = name === 'home' ? data.site.homeTitle : navItem.label + ' — ' + data.site.name;
+    document.title = name === 'home' ? data.site.homeTitle
+      : (navItem ? navItem.label : (catCur ? catN(catCur, 't') : 'Service')) + ' — ' + data.site.name;
 
     currentView = $('#v-' + name);
     scrollToTop();
@@ -315,6 +313,8 @@
       el.style.transitionDelay = (i % 3) * 90 + 'ms';
       revealObserver.observe(el);
     });
+    // Elements outside the views (the contact panel) are shared by every page.
+    $$('#contact .rv:not(.in)').forEach(el => revealObserver.observe(el));
     $$('.cnt', currentView).forEach(el => { el.textContent = '0'; counterObserver.observe(el); });
     closeMenu();
   }
@@ -391,25 +391,27 @@
     dom.rail.style.transform = 'scaleY(' + clamp((vh * 0.6 - r.top) / r.height, 0, 1) + ')';
   }
 
-  // Constellation: lines draw and stars light up with scroll progress through #story.
+  // Orbit: as you scroll, each service joins the core in order; the ring fills and the caption follows.
   let storyKey = '';
   function updateStory() {
     const story = dom.story;
+    if (!story.offsetParent) return;      // story lives on the home page only
     const r = story.getBoundingClientRect();
     if (r.bottom < -50 || r.top > innerHeight + 50) return;
 
     const sticky = story.firstElementChild;
     const p = clamp(-(r.top - 76) / (r.height - sticky.offsetHeight), 0, 1);
-    const t = p * starCount, active = Math.min(starCount - 1, Math.floor(t)), done = p > 0.96;
+    const t = p * starCount, active = Math.min(starCount - 1, Math.floor(t)), done = p > 0.97;
 
-    for (let i = 0; i < starCount - 1; i++) {
+    const ring = document.getElementById('orbp');
+    ring.style.strokeDashoffset = ring.dataset.l * (1 - (done ? 1 : clamp((t - 0.5) / starCount, 0, 1)));
+    for (let i = 0; i < starCount; i++) {
       const line = document.getElementById('ln' + i);
       line.style.strokeDashoffset = line.dataset.l * (1 - clamp(t - i, 0, 1));
-    }
-    for (let i = 0; i < starCount; i++) {
       const star = document.getElementById('sg' + i);
-      star.style.opacity = (i === 0 ? t > 0.02 : t >= i - 0.02) ? 1 : 0;
+      star.style.opacity = t >= i ? 1 : 0.28;
       star.classList.toggle('act', i === active && !done);
+      document.getElementById('sl' + i).className = done || i < active ? 'on' : i === active ? 'act' : '';
     }
 
     const key = done ? 'done' : active;
@@ -420,11 +422,11 @@
       dom.cn.innerHTML = richText(data.story.doneTitle);
       dom.cd.textContent = data.story.doneText;
     } else {
-      const service = data.services[active];
-      const words = service.title.split(' ');
+      const service = data.catalog.services[active];
+      const words = catN(service, 't').split(' ');
       dom.cc.textContent = (active + 1) + ' of ' + starCount;
       dom.cn.innerHTML = '<b>' + escapeHtml(words.shift()) + '</b> ' + escapeHtml(words.join(' '));
-      dom.cd.textContent = service.summary;
+      dom.cd.textContent = catN(service, 'd');
     }
   }
 
@@ -474,23 +476,161 @@
 
   function setMessage(el, text, kind) { el.textContent = text; el.className = 'msg ' + kind; }
 
+  /* ---------------------------------------------------------------
+     SERVICE TILES + SERVICE PAGES  (content: data.json > catalog)
+     Every payment button ends in catPay(). To connect Razorpay, define
+       window.caelstarPay = ({service, package, amount, unit, quantity}) => { ...open checkout... }
+     Until then a demo checkout window is shown.
+     --------------------------------------------------------------- */
+  let catL = 'en', catCur = null;
+  const catInr = x => '₹' + x.toLocaleString('en-IN');
+  const catU = k => data.catalog.ui[catL][k];
+  const catUn = x => catL === 'hi' ? (data.catalog.units[x] || x) : x;
+  const catN = (sv, k) => (catL === 'hi' && data.catalog.hi[sv.id]) ? data.catalog.hi[sv.id][k] : sv[k];
+  const catIcon = k => '<span class="ic" data-k="' + k + '"><svg viewBox="0 0 24 24"><path d="' + data.catalog.icons[k] + '"/></svg></span>';
+
+  function renderTiles() {
+    $$('[data-tiles]').forEach(el => {
+      el.innerHTML = data.catalog.services.map(sv =>
+        '<a class="card tile" href="#service-' + sv.id + '">' + catIcon(sv.ic) + '<h3>' + catN(sv, 't') + '</h3><p>' + catN(sv, 'd') +
+        '</p><span class="btn sea">' + catN(sv, 'b') + '<i>↗</i></span></a>').join('');
+    });
+  }
+
+  function renderService(id) {
+    const sv = data.catalog.services.find(x => x.id === id);
+    if (!sv) { location.hash = ''; return; }
+    catCur = sv;
+    const el = $('#svc');
+    el.innerHTML = `<button class="back" type="button" id="catBack">${catU('back')}</button>
+      <div class="svh">${catIcon(sv.ic)}<div><h1>${catN(sv, 't')}</h1><p class="sub" style="margin:8px 0 0">${catN(sv, 'd')}</p></div></div>
+      <div class="blk"><h2>${sv.quote ? catU('scope') : catU('pkg')}</h2><p class="gst" style="margin:0 0 20px">${sv.quote ? catU('qn') : catU('gst')}</p>
+      <div class="grid">${sv.pk.map((p, i) => `<article class="card pk${i === 1 ? ' pkf' : ''}">${i === 1 ? `<span class="tag">${catU('pop')}</span>` : ''}<h3>${p[0]}</h3>${sv.quote ? '' : `<div class="amt">${catInr(p[1])} <small>${catUn(p[3] || sv.u)}</small></div>`}${p[4] ? `<div class="qty"><span class="gst">${catU('addp').replace('{a}', catInr(p[4].add))}</span><div class="stp"><button type="button" class="qm" aria-label="Remove page">−</button><b class="qn">1</b><button type="button" class="qp" aria-label="Add page">+</button></div><div class="tot"></div></div>` : ''}<ul class="ben">${p[2].map(f => `<li>${f}</li>`).join('')}</ul><button type="button" class="btn ${i === 1 ? 'sea' : 'dark'}">${sv.quote ? catU('disc') : catU('proc')}</button></article>`).join('')}</div></div>`;
+    $('#catBack').onclick = () => { location.hash = ''; };
+    el.querySelectorAll('.pk').forEach((card, i) => {
+      const p = sv.pk[i]; let q = 1;
+      const tot = card.querySelector('.tot'), qn = card.querySelector('.qn');
+      const price = () => p[4] ? p[1] + p[4].add * (q - 1) : p[1];
+      const upd = () => { qn.textContent = q; tot.textContent = catU('tot').replace('{n}', q).replace('{t}', catInr(price())); };
+      if (p[4]) {
+        card.querySelector('.qm').onclick = () => { q = Math.max(1, q - 1); upd(); };
+        card.querySelector('.qp').onclick = () => { q = Math.min(50, q + 1); upd(); };
+        upd();
+      }
+      card.querySelector('.btn').onclick = () => catPay(sv, p, q, price());
+    });
+  }
+
+  function catPay(sv, p, qty, amount) {
+    qty = qty || 1; amount = amount == null ? p[1] : amount;
+    const modal = $('#modal'), box = $('#box');
+    const close = () => modal.classList.remove('on');
+    if (sv.quote) {   // App development: no payment, send an enquiry
+      openGetStarted(sv.id);
+      return;
+    }
+    if (typeof window.caelstarPay === 'function') {
+      window.caelstarPay({ service: sv.id, package: p[0], amount: amount, unit: sv.u, quantity: qty });
+      return;
+    }
+    box.innerHTML = `<div class="mh">${catU('mh')}</div><div class="mb"><div class="demo">${catU('demo')}</div><div class="row"><span>${catN(sv, 't')}</span></div><div class="row"><span>${p[0]}${qty > 1 ? ' × ' + qty : ''} ${catU('pkgw')}</span><b>${catInr(amount)}</b></div><div class="gst">${catU('gstinv')}</div><button class="btn sea" id="catOk">${catU('pay')} ${catInr(amount)}</button><button class="btn light" id="catX">${catU('cancel')}</button></div>`;
+    modal.classList.add('on');
+    $('#catX').onclick = close;
+    $('#catOk').onclick = () => {
+      box.innerHTML = `<div class="mh">${catU('ok')}</div><div class="mb"><div style="font-size:40px">✅</div><p style="margin:0">${catU('thanks').replace('{p}', p[0])}</p><button class="btn dark" id="catX">${catU('done')}</button></div>`;
+      $('#catX').onclick = close;
+    };
+  }
+
+  /* ---------------------------------------------------------------
+     GET STARTED: enquiry form in a pop-up. A static site cannot send mail by itself,
+     so Send opens the visitor's email app, and the address can always be copied.
+     --------------------------------------------------------------- */
+  function openGetStarted(serviceId) {
+    const modal = $('#modal'), box = $('#box');
+    const close = () => modal.classList.remove('on');
+    const email = data.site.email;
+    const options = data.catalog.services.map(sv =>
+      '<option value="' + escapeHtml(catN(sv, 't')) + '"' + (sv.id === serviceId ? ' selected' : '') + '>' + escapeHtml(catN(sv, 't')) + '</option>').join('');
+    box.innerHTML = '<div class="mh">Tell us what you need</div><form class="mb gs" id="gsf" novalidate>' +
+      '<label for="gsn">Your name</label><input id="gsn" autocomplete="name">' +
+      '<label for="gse">Email</label><input id="gse" type="email" autocomplete="email">' +
+      '<label for="gss">Service</label><select id="gss"><option value="Not sure yet">Not sure yet</option>' + options + '</select>' +
+      '<label for="gsm">What are you building?</label><textarea id="gsm" rows="3"></textarea>' +
+      '<div class="msg" id="gsmsg" role="status"></div>' +
+      '<button class="btn sea" type="submit">Send enquiry</button>' +
+      '<div class="gst">Or write to us at <b id="gsa">' + escapeHtml(email) + '</b> <button type="button" class="back cp" id="gscp">Copy</button><br>Or call <a href="' + data.site.phoneHref + '"><b>' + escapeHtml(data.site.phone) + '</b></a></div>' +
+      '<button class="btn light" type="button" id="gsx">Close</button></form>';
+    modal.classList.add('on');
+    $('#gsx').onclick = close;
+    $('#gscp').onclick = () => {
+      const done = () => { $('#gscp').textContent = 'Copied'; };
+      try { navigator.clipboard.writeText(email).then(done, () => selectAddress()); } catch (e) { selectAddress(); }
+    };
+    function selectAddress() {
+      const range = document.createRange(); range.selectNodeContents($('#gsa'));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      $('#gscp').textContent = 'Press Ctrl+C';
+    }
+    $('#gsf').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = $('#gsn').value.trim(), from = $('#gse').value.trim(), note = $('#gsm').value.trim(), service = $('#gss').value;
+      const msg = $('#gsmsg');
+      if (!name) { setMessage(msg, 'Please enter your name.', 'err'); return; }
+      if (!EMAIL_PATTERN.test(from)) { setMessage(msg, 'Please enter a valid email address.', 'err'); return; }
+      setMessage(msg, 'Your email app should open with the details filled in. If nothing opens, copy our address below and send them yourself.', 'ok');
+      const body = 'Name: ' + name + '\nEmail: ' + from + '\nService: ' + service + '\n\n' + note;
+      location.href = 'mailto:' + email + '?subject=' + encodeURIComponent('Enquiry: ' + service) + '&body=' + encodeURIComponent(body);
+    });
+    setTimeout(() => $('#gsn').focus(), 50);
+  }
+
+  function catSetLang(l) {
+    catL = l;
+    document.documentElement.lang = l;
+    $('#lgn').textContent = l === 'hi' ? 'हिं' : 'EN';
+    try { localStorage.setItem('cl', l); } catch (e) {}
+    renderTiles();
+    renderStory(); storyKey = '';
+    if (currentView && currentView.id === 'v-service' && catCur) renderService(catCur.id);
+  }
+
+  function initCatalog() {
+    const modal = $('#modal'), box = $('#box');
+    renderTiles();
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('on'); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') modal.classList.remove('on'); });
+    $('#lg').addEventListener('click', () => {
+      const more = ['বাংলা', 'தமிழ்', 'తెలుగు', 'मराठी', 'ગુજરાતી', 'ಕನ್ನಡ', 'മലയാളം', 'ਪੰਜਾਬੀ', 'ଓଡ଼ିଆ', 'اردو'];
+      box.innerHTML = `<div class="mh">Choose your language · अपनी भाषा चुनें</div><div class="mb"><div class="lang"><button class="btn sea" data-l="en">English</button><button class="btn sea" data-l="hi">हिन्दी</button></div><div class="gst">More Indian languages</div><div class="chips">${more.map(x => `<span class="chip">${x}</span>`).join('')}</div><div class="demo">Other languages are shown as a preview and arrive in the full build.</div></div>`;
+      modal.classList.add('on');
+      box.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { catSetLang(b.dataset.l); modal.classList.remove('on'); });
+    });
+    // Every "Get Started" button opens the enquiry pop-up.
+    document.addEventListener('click', e => {
+      if (!e.target.closest('[data-gs]')) return;
+      e.preventDefault();
+      closeMenu();
+      openGetStarted();
+    });
+    // Package buttons elsewhere (Pricing page) use data-pay="<serviceId>-<packageIndex>".
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-pay]');
+      if (!btn) return;
+      e.preventDefault();
+      const cut = btn.dataset.pay.lastIndexOf('-');
+      const sv = data.catalog.services.find(x => x.id === btn.dataset.pay.slice(0, cut));
+      const p = sv && sv.pk[Number(btn.dataset.pay.slice(cut + 1))];
+      if (p) catPay(sv, p, 1, p[1]);
+    });
+    try { const saved = localStorage.getItem('cl'); if (saved && saved !== 'en') catSetLang(saved); } catch (e) {}
+  }
+
   function initNewsletter() {
     const copy = data.footer.newsletter;
     $('#nb').addEventListener('click', () => {
       const valid = EMAIL_PATTERN.test($('#nm').value.trim());
       setMessage($('#nmsg'), valid ? copy.successMessage : copy.errorMessage, valid ? 'ok' : 'err');
-    });
-  }
-
-  function initSellerForm() {
-    const form = data.pricingPage.seller.form;
-    $('#sb').addEventListener('click', () => {
-      const name = $('#sn').value.trim(), email = $('#se').value.trim(), business = $('#sbz').value.trim();
-      const message = $('#smsg');
-      if (!name || !EMAIL_PATTERN.test(email)) { setMessage(message, form.errorMessage, 'err'); return; }
-      setMessage(message, form.successMessage, 'ok');
-      location.href = 'mailto:' + data.site.email + '?subject=' + encodeURIComponent(form.mailSubject) +
-        '&body=' + encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\nBusiness: ' + business);
     });
   }
 
@@ -541,9 +681,9 @@
     cacheDom();
     initMotion();
     initMenu();
+    initCatalog();
     initRouter();
     initNewsletter();
-    initSellerForm();
     initEasterEggs();
     addEventListener('resize', () => { marqueeWidth = 0; });
     requestAnimationFrame(frame);
